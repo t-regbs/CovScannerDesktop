@@ -12,11 +12,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,6 +28,7 @@ import androidx.compose.ui.window.*
 import style.icAppIcon
 import style.icEmptyImage
 import utils.getPreferredWindowSize
+import utils.imageFromFile
 import java.awt.FileDialog
 import java.awt.Frame
 import java.io.File
@@ -33,11 +37,13 @@ import java.io.File
 @Preview
 fun App() {
     val isPickerOpen = remember { mutableStateOf(false) }
+    val selectedFile: MutableState<File?> = remember { mutableStateOf(null) }
     if (isPickerOpen.value) {
         FileDialog(
             onCloseRequest = {
                 isPickerOpen.value = false
                 println("Result ${it?.last()}")
+                selectedFile.value = it!!.last()
             }
         )
     }
@@ -60,8 +66,10 @@ fun App() {
                     elevation = 8.dp
                 ) {
                     Image(
-                        icEmptyImage(),
+                        if (selectedFile.value == null) icEmptyImage()
+                        else BitmapPainter(imageFromFile(selectedFile.value!!)),
                         contentDescription = null,
+                        contentScale = if (selectedFile.value == null) ContentScale.Fit else ContentScale.FillBounds
                     )
                 }
 
