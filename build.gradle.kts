@@ -18,7 +18,9 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
-//    implementation("androidx.compose.ui:ui-util:1.0.0-alpha3")
+//    implementation("org.tensorflow:tensorflow-lite:2.4.0")
+//    implementation("org.tensorflow:tensorflow-lite-gpu:0.0.0-nightly")
+//    implementation("org.tensorflow:tensorflow-lite-support:0.1.0")
 }
 
 tasks.withType<KotlinCompile>() {

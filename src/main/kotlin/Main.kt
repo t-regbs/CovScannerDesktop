@@ -27,7 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.*
 import components.Carousel
+import components.SplashUI
 import kotlinx.coroutines.InternalCoroutinesApi
+import model.ContentState
 import style.MarrColor
 import style.icAppIcon
 import style.icEmptyImage
@@ -117,17 +119,35 @@ fun App() {
 
 @InternalCoroutinesApi
 fun main() = application {
+    val state = rememberWindowState()
+    val content = remember { ContentState.applyContent(state) }
     val icon = icAppIcon()
-    Window(
-        onCloseRequest = ::exitApplication,
-        title = "Cov Scanner",
-        icon = icon,
-        state = WindowState(
-            position = WindowPosition.Aligned(Alignment.Center),
-            size = getPreferredWindowSize(800, 1000)
-        ),
-    ) {
-        App()
+
+    if (content.isAppReady()) {
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = "Cov Scanner",
+            icon = icon,
+            state = WindowState(
+                position = WindowPosition.Aligned(Alignment.Center),
+                size = getPreferredWindowSize(800, 1000)
+            ),
+        ) {
+            App()
+        }
+    } else {
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = "Cov Scanner",
+            state = WindowState(
+                position = WindowPosition.Aligned(Alignment.Center),
+                size = getPreferredWindowSize(800, 300)
+            ),
+            undecorated = true,
+            icon = icon,
+        ) {
+            SplashUI()
+        }
     }
 }
 
